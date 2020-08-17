@@ -7,6 +7,7 @@ CREATE TABLE `Cliente` (
   PRIMARY KEY (`id`),
   UNIQUE INDEX `cpf_UNIQUE` (`cpf` ASC))
 ENGINE = InnoDB;
+
  
 CREATE TABLE `Cartao` (
   `id` INT NOT NULL AUTO_INCREMENT,
