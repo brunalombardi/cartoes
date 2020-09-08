@@ -1,8 +1,10 @@
 package com.cartoes.api.controllers;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.validation.BindingResult;
 import org.slf4j.Logger;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.slf4j.LoggerFactory;
@@ -17,6 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cartoes.api.entities.Transacao;
 import com.cartoes.api.services.TransacaoService;
 import com.cartoes.api.utils.ConsistenciaException;
+import com.cartoes.api.dtos.TransacaoDto;
+import com.cartoes.api.utils.ConversaoUtils;
+import com.cartoes.api.response.Response;
+
 
 
 @RestController
@@ -30,35 +36,55 @@ public class TransacaoController {
 	private TransacaoService transacaoService;
 	
 	@GetMapping(value = "/cartao/{cartaoNumero}")
-	public ResponseEntity<List<Transacao>> buscarPorCartaonumero(@PathVariable("cartaonumero") String cartaonumero){
+	public ResponseEntity<Response<List<TransacaoDto>>> buscarPorCartaonumero(@PathVariable("numeroCartao") String cartaonumero) {
+		Response<List<TransacaoDto>> response = new Response<List<TransacaoDto>>();
 		try {
-			log.info("Controller: buscando transações do cartão de Numero: {}", cartaonumero);
-			
-			Optional<List<Transacao>> listaTransacoes = transacaoService.buscarPorCartaonumero(cartaonumero);
-			
-			return ResponseEntity.ok(listaTransacoes.get());
+			Optional<List<Transacao>> listaTransacao = transacaoService.buscarPorCartaonumero(cartaonumero);
+
+			response.setDados(ConversaoUtils.ConverterListaTransacao(listaTransacao.get()));
+
+			return ResponseEntity.ok(response);
+
 		} catch (ConsistenciaException e) {
 			log.info("Controller: Inconsistencia de dados {}", e.getMensagem());
-			return ResponseEntity.badRequest().body(new ArrayList<Transacao>());			
+			response.adicionarErro(e.getMensagem());
+			return ResponseEntity.badRequest().body(response);			
 		} catch (Exception e) {
 			log.error("Controller: Ocorreu um erro na aplicação: {}", e.getMessage());
-			return ResponseEntity.status(500).body(new ArrayList<Transacao>());
+			response.adicionarErro("Ocorreu um erro na aplicação: {}", e.getMessage());
+			return ResponseEntity.status(500).body(response);
 		}
 	}
 	
 	
 	@PostMapping
-	public ResponseEntity<Transacao> salvar(@RequestBody Transacao transacao){
+	public ResponseEntity<Response<TransacaoDto>> salvar(@Valid @RequestBody TransacaoDto transacaoDto , BindingResult result) {
+
+		Response<TransacaoDto> response = new Response<TransacaoDto>();
 		try {
-			log.info("Controller: salvando a transacao: {}", transacao.toString());
-			
-			return ResponseEntity.ok(this.transacaoService.salvar(transacao));
+			log.info("Controller: salvando a transacao: {}", transacaoDto.toString());
+
+			if (result.hasErrors()) {
+				for (int i = 0; i < result.getErrorCount(); i++) {
+				response.adicionarErro(result.getAllErrors().get(i).getDefaultMessage());
+				}
+				log.info("Controller: Os campos obrigatórios não foram preenchidos");
+				return ResponseEntity.badRequest().body(response);
+				}
+
+			Transacao transacao = this.transacaoService.salvar(ConversaoUtils.Converter(transacaoDto));
+			response.setDados(ConversaoUtils.Converter(transacao));
+
+			return ResponseEntity.ok(response);
 		} catch (ConsistenciaException e) {
 			log.info("Controller: Inconsistência de dados: {}", e.getMensagem());
-			return ResponseEntity.badRequest().body(new Transacao());
+			response.adicionarErro(e.getMensagem());
+			return ResponseEntity.badRequest().body(response);
+
 		} catch (Exception e) {
 			log.error("Controller: Ocorreu um erro na aplicação: {}", e.getMessage());
-			return ResponseEntity.status(500).body(new Transacao());
+			response.adicionarErro("Ocorreu um erro na aplicação: {}", e.getMessage());
+			return ResponseEntity.status(500).body(response);
 		}
 	}
 }
