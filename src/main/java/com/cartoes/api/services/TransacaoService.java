@@ -32,7 +32,7 @@ public class TransacaoService {
  
          	log.info("Service: buscando as transacoes do cartao de numero: {}", cartaonumero);
  
-         	Optional<List<Transacao>> transacao = Optional.ofNullable(transacaoRepository.findByCartaonumero(cartaonumero));
+         	Optional<List<Transacao>> transacao = transacaoRepository.findByCartaonumero(cartaonumero);
  
          	if (!transacao.isPresent() || transacao.get().size() < 1)  {
  

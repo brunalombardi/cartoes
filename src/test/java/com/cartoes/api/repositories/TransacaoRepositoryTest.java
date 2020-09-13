@@ -8,6 +8,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.After;
 import org.junit.Before;
@@ -103,12 +104,12 @@ public class TransacaoRepositoryTest {
 	
 	@Test
 	public void testFindByCartaoNumero() {
-		List<Transacao> lstTransacao = transacaoRepository.findByCartaonumero(transacaoTeste.getCartao().getNumero());
-		if(lstTransacao.size() != 1) {
+		Optional<List<Transacao>> lstTransacao = transacaoRepository.findByCartaonumero(transacaoTeste.getCartao().getNumero());
+		if(lstTransacao.get().size() != 1) {
 			fail();
 		}
 		
-		Transacao transacao = lstTransacao.get(0);
+		Transacao transacao = lstTransacao.get().get(0);
 		
 		assertTrue(transacao.getCartao().getNumero().equals(transacaoTeste.getCartao().getNumero()));
 	}
