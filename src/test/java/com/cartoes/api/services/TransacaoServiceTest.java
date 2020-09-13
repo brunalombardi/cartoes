@@ -8,7 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
+import java.util.Date;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.BDDMockito;
@@ -80,19 +80,24 @@ public class TransacaoServiceTest {
 		assertNotNull(resultado);
 	}
 
-	@Test(expected = ConsistenciaException.class)
-	public void testSalvarNumeroCartaoNaoEncontrado() throws ConsistenciaException {
-
-		BDDMockito.given(transacaoRepository.findByCartaonumero(Mockito.anyString())).willReturn(Optional.empty());
-
-		Cartao a = new Cartao();
-		a.setNumero("34244234");
-		Transacao c = new Transacao();
-
-		c.setCartao(a);
-
-		transacaoService.salvar(c);
-
-	}
 	
+		
+	
+	@Test(expected = ConsistenciaException.class)
+	public void testSalvarCartaoVencido() throws ConsistenciaException {
+		
+		Cartao cartao = new Cartao();
+		cartao.setNumero("5381579886310193");
+		cartao.setDataValidade(new Date( new Date().getTime() - (1000 * 60 * 60 * 24) ));
+		
+		BDDMockito.given(cartaoRepository.findByNumero(Mockito.anyString()))
+		.willReturn(Optional.of(cartao));
+		
+		Transacao transacao = new Transacao();
+		transacao.setCartao(cartao);
+		
+		transacaoService.salvar(transacao);
+		
+	}
+
 }

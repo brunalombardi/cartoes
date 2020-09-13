@@ -84,44 +84,7 @@ public class TransacaoControllerTest {
 
 	}
 	
-	@Test
-	@WithMockUser
-	public void testBuscarPorNumeroCartaoSucesso() throws Exception {
-
-		List<Transacao> lst = new ArrayList<Transacao>();
-		Transacao transacao = CriarTransacaoTestes();
-		lst.add(transacao);
-		
-		BDDMockito.given(transacaoService.buscarPorCartaonumero(Mockito.anyString()))
-			.willReturn(Optional.of(lst));
-
-		mvc.perform(MockMvcRequestBuilders.get("/api/transacao/cartao/1230981203")
-			.accept(MediaType.APPLICATION_JSON))
-			.andExpect(status().isOk())
-			.andDo(print())
-			.andExpect(jsonPath("$.dados.[0].id").value(transacao.getId()))
-			.andExpect(jsonPath("$.dados.[0].cnpj").value(transacao.getCnpj()))
-			.andExpect(jsonPath("$.dados.[0].valor").value(transacao.getValor()))
-			.andExpect(jsonPath("$.dados.[0].qdtParcelas").value(transacao.getQtdParcelas()))
-			.andExpect(jsonPath("$.dados.[0].juros").value(transacao.getJuros()))
-			.andExpect(jsonPath("$.dados.[0].cartaoNumero").value(transacao.getCartao().getNumero()))
-			//.andExpect(jsonPath("$.dados.[0].dataTransacao").value(transacao.getDataTransacao()))
-			.andExpect(jsonPath("$.erros").isEmpty());
-
-	}
-	@Test
-    @WithMockUser
-    public void testBuscarPorNumeroCartaoInconsistencia() throws Exception {
-
-        BDDMockito.given(transacaoService.buscarPorCartaonumero((Mockito.anyString())))
-            .willThrow(new ConsistenciaException("Teste inconsistência"));
-
-        mvc.perform(MockMvcRequestBuilders.get("/api/transacao/cartao/1230981203")
-            .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isBadRequest())
-            .andExpect(jsonPath("$.erros").value("Teste inconsistência"));
-
-    }
+	
 	@Test
     @WithMockUser
     public void testSalvarSucesso() throws Exception {

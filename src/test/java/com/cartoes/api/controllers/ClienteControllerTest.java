@@ -166,170 +166,19 @@ public class ClienteControllerTest {
 
 	}
 	
-	@Test
-	@WithMockUser
-	public void testSalvarNomeEmBranco() throws Exception {
 
-		ClienteDto objEntrada = new ClienteDto();
-
-		objEntrada.setCpf("05887098082");
-		objEntrada.setUf("PR");
-
-		String json = new ObjectMapper().writeValueAsString(objEntrada);
-
-		mvc.perform(MockMvcRequestBuilders.post("/api/cliente")
-			.content(json)
-			.contentType(MediaType.APPLICATION_JSON)
-			.accept(MediaType.APPLICATION_JSON))
-			.andExpect(status().isBadRequest())
-			.andExpect(jsonPath("$.erros").value("Nome não pode ser vazio."));
-
-	}
 	
-	@Test
-	@WithMockUser
-	public void testSalvarNomeInsuficiente() throws Exception {
-
-		ClienteDto objEntrada = new ClienteDto();
-
-		objEntrada.setNome("abcd");
-		objEntrada.setCpf("05887098082");
-		objEntrada.setUf("PR");
-
-		String json = new ObjectMapper().writeValueAsString(objEntrada);
-
-		mvc.perform(MockMvcRequestBuilders.post("/api/cliente")
-			.content(json)
-			.contentType(MediaType.APPLICATION_JSON)
-			.accept(MediaType.APPLICATION_JSON))
-			.andExpect(status().isBadRequest())
-			.andExpect(jsonPath("$.erros").value("Nome deve conter entre 5 e 100 caracteres."));
-
-	}
 	
-	@Test
-	@WithMockUser
-	public void testSalvarNomeExcedente() throws Exception {
+	
 
-		ClienteDto objEntrada = new ClienteDto();
-
-		objEntrada.setNome("abcdefjgijabcdefjgijabcdefjgijabcdefjgijabcdefjgij"
-				+ "abcdefjgijabcdefjgijabcdefjgijabcdefjgijabcdefjgij1");
-		objEntrada.setCpf("05887098082");
-		objEntrada.setUf("PR");
-
-		String json = new ObjectMapper().writeValueAsString(objEntrada);
-
-		mvc.perform(MockMvcRequestBuilders.post("/api/cliente")
-			.content(json)
-			.contentType(MediaType.APPLICATION_JSON)
-			.accept(MediaType.APPLICATION_JSON))
-			.andExpect(status().isBadRequest())
-			.andExpect(jsonPath("$.erros").value("Nome deve conter entre 5 e 100 caracteres."));
-
-	}
-
-	@Test
-	@WithMockUser
-	public void testSalvarCpfEmBranco() throws Exception {
-
-		ClienteDto objEntrada = new ClienteDto();
-
-		objEntrada.setNome("Teste inclusão");
-		objEntrada.setUf("PR");
-
-		String json = new ObjectMapper().writeValueAsString(objEntrada);
-
-		mvc.perform(MockMvcRequestBuilders.post("/api/cliente")
-			.content(json)
-			.contentType(MediaType.APPLICATION_JSON)
-			.accept(MediaType.APPLICATION_JSON))
-			.andExpect(status().isBadRequest())
-			.andExpect(jsonPath("$.erros").value("CPF não pode ser vazio."));
-
-	}
+	
 		
-	@Test
-	@WithMockUser
-	public void testSalvarCpfInvalido() throws Exception {
-
-		ClienteDto objEntrada = new ClienteDto();
-
-		objEntrada.setNome("Teste inclusão");
-		objEntrada.setCpf("12312312312");
-		objEntrada.setUf("PR");
-
-		String json = new ObjectMapper().writeValueAsString(objEntrada);
-
-		mvc.perform(MockMvcRequestBuilders.post("/api/cliente")
-			.content(json)
-			.contentType(MediaType.APPLICATION_JSON)
-			.accept(MediaType.APPLICATION_JSON))
-			.andExpect(status().isBadRequest())
-			.andExpect(jsonPath("$.erros").value("CPF inválido."));
-
-	}
 	
-	@Test
-	@WithMockUser
-	public void testSalvarUfEmBranco() throws Exception {
-
-		ClienteDto objEntrada = new ClienteDto();
-
-		objEntrada.setNome("Teste inclusão");
-		objEntrada.setCpf("05887098082");
-
-		String json = new ObjectMapper().writeValueAsString(objEntrada);
-
-		mvc.perform(MockMvcRequestBuilders.post("/api/cliente")
-			.content(json)
-			.contentType(MediaType.APPLICATION_JSON)
-			.accept(MediaType.APPLICATION_JSON))
-			.andExpect(status().isBadRequest())
-			.andExpect(jsonPath("$.erros").value("UF não pode ser vazio."));
-
-	}
 	
-	@Test
-	@WithMockUser
-	public void testSalvarUfInsuficiente() throws Exception {
-
-		ClienteDto objEntrada = new ClienteDto();
-
-		objEntrada.setNome("Teste inclusão");
-		objEntrada.setCpf("05887098082");
-		objEntrada.setUf("P");
-
-		String json = new ObjectMapper().writeValueAsString(objEntrada);
-
-		mvc.perform(MockMvcRequestBuilders.post("/api/cliente")
-			.content(json)
-			.contentType(MediaType.APPLICATION_JSON)
-			.accept(MediaType.APPLICATION_JSON))
-			.andExpect(status().isBadRequest())
-			.andExpect(jsonPath("$.erros").value("UF deve conter 2 caracteres."));
-
-	}
 	
-	@Test
-	@WithMockUser
-	public void testSalvarUfExcedente() throws Exception {
-
-		ClienteDto objEntrada = new ClienteDto();
-
-		objEntrada.setNome("Teste inclusão");
-		objEntrada.setCpf("05887098082");
-		objEntrada.setUf("PRR");
-
-		String json = new ObjectMapper().writeValueAsString(objEntrada);
-
-		mvc.perform(MockMvcRequestBuilders.post("/api/cliente")
-			.content(json)
-			.contentType(MediaType.APPLICATION_JSON)
-			.accept(MediaType.APPLICATION_JSON))
-			.andExpect(status().isBadRequest())
-			.andExpect(jsonPath("$.erros").value("UF deve conter 2 caracteres."));
-
-	}
+	
+	
+	
+	
 	
 }
