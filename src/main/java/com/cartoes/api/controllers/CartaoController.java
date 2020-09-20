@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -110,6 +111,7 @@ public class CartaoController {
    	 * @return Sucesso/erro
    	 */
    	@DeleteMapping(value = "excluir/{id}")
+   	@PreAuthorize("hasAnyRole('EXCLUSAO')")
    	public ResponseEntity<Response<String>> excluirPorId(@PathVariable("id") int id) {
 		Response<String> response = new Response<String>();
          	

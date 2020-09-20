@@ -41,7 +41,7 @@ public class UsuarioController {
 	@PreAuthorize("hasAnyRole('ADM_USUARIO')")
 	public ResponseEntity<Response<UsuarioDto>> buscarPorId(@PathVariable("id") int id) {
 		Response<UsuarioDto> response = new Response<UsuarioDto>();
-		
+
 		try {
 			log.info("Controller: buscando usuario com id: {}", id);
 			Optional<Usuario> usuario = usuarioService.buscarPorId(id);
@@ -65,15 +65,15 @@ public class UsuarioController {
 	 * @return Dados do usuario persistido
 	 */
 	@PostMapping
-	
+
 	@PreAuthorize("hasAnyRole('ADM_USUARIO')")
-	
+
 	public ResponseEntity<Response<UsuarioDto>> salvar(@Valid @RequestBody UsuarioDto usuarioDto,
 			BindingResult result) {
 		Response<UsuarioDto> response = new Response<UsuarioDto>();
 		try {
 			log.info("Controller: salvando o usuario: {}", usuarioDto.toString());
-			
+
 // Verificando se todos os campos da DTO foram preenchidos
 			if (result.hasErrors()) {
 				for (int i = 0; i < result.getErrorCount(); i++) {
@@ -84,7 +84,7 @@ public class UsuarioController {
 			}
 // Converte o objeto usuarioDto para um objeto do tipo Usuario (entidade)
 			Usuario usuario = ConversaoUtils.Converter(usuarioDto);
-			
+
 // Salvando o usuário
 			response.setDados(ConversaoUtils.Converter(this.usuarioService.salvar(usuario)));
 			return ResponseEntity.ok(response);

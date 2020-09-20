@@ -1,6 +1,7 @@
 package com.cartoes.api.entities;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -11,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.JoinColumn;
 
@@ -29,6 +31,8 @@ public class Usuario implements Serializable {
 	private String senha;
 	@Column(name = "ativo", nullable = false)
 	private boolean ativo;
+	@Column(name = "ultimo_acesso", nullable = false)
+   	private Date ultimoAcesso;
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinTable(name = "Usuario_Regra", joinColumns = { @JoinColumn(name = "usuario_id") }, inverseJoinColumns = {
 			@JoinColumn(name = "regra_id") })
@@ -74,6 +78,13 @@ public class Usuario implements Serializable {
 		this.ativo = ativo;
 	}
 
+	public Date getUltimoAcesso() {
+     	return ultimoAcesso;
+	}
+
+	public void setUltimoAcesso(Date ultimoAcesso) {
+     	this.ultimoAcesso = ultimoAcesso;
+	}
 	public List<Regra> getRegras() {
 		return regras;
 	}
@@ -81,6 +92,11 @@ public class Usuario implements Serializable {
 	public void setRegras(List<Regra> regras) {
 		this.regras = regras;
 	}
+	
+	@PrePersist
+   	public void prePersist() {
+   			ultimoAcesso = new Date();
+   	}
 
 	@Override
 	public String toString() {

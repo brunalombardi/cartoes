@@ -17,6 +17,7 @@ import com.cartoes.api.repositories.UsuarioRepository;
 import com.cartoes.api.security.utils.JwtTokenUtil;
 import com.cartoes.api.utils.ConsistenciaException;
 import com.cartoes.api.utils.SenhaUtils;
+import org.springframework.scheduling.annotation.Scheduled;
 
 @Service
 public class UsuarioService {
@@ -132,4 +133,18 @@ public class UsuarioService {
 		}
 		usuarioRepository.alterarSenhaUsuario(SenhaUtils.gerarHash(novaSenha), id);
 	}
+	public void alterarUltimoAcesso(String cpf) {
+
+   		log.info("Service: alterando o último acesso do usuário de cpf: {}", cpf);
+   		usuarioRepository.alterarUltimoAcesso(cpf);
+
+   	}
+
+   	@Scheduled(fixedRate = 43200000)
+   	public void bloquearUsuarios() {
+
+   		log.info("Service: verificando usuarios inativos por um mes");
+   		usuarioRepository.bloquearUsuarios();
+
+   	}
 }
